@@ -1,10 +1,10 @@
 .splash {
-  min-height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   background: var(--color-white);
   color: var(--color-ink);
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 .splash__center {
   flex: 1;

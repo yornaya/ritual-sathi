@@ -1,9 +1,9 @@
+/* BottomNav lives as the last child of .screen (a flex column that fills
+   the viewport / phone frame and scrolls). margin-top:auto pushes it to
+   the bottom; flex-shrink:0 + a hard height keep it from collapsing. */
 .bottom-nav {
-  /* Sticky inside the scrolling .screen so it always sits at the bottom of the
-     phone frame on desktop and at the bottom of the viewport on mobile. */
-  position: sticky;
-  bottom: 0;
   margin-top: auto;
+  flex: 0 0 var(--nav-h);
   width: 100%;
   height: var(--nav-h);
   background: var(--color-white);
@@ -12,8 +12,9 @@
   justify-content: space-around;
   align-items: center;
   padding-bottom: env(safe-area-inset-bottom);
+  position: sticky;
+  bottom: 0;
   z-index: 50;
-  flex-shrink: 0;
 }
 .bn-item {
   display: flex;

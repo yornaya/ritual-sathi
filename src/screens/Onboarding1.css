@@ -1,10 +1,10 @@
 .ob1 {
-  min-height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   background: var(--color-white);
   display: flex;
   flex-direction: column;
   color: var(--color-ink);
-  flex: 1;
 }
 .ob1__hero {
   flex: 1;

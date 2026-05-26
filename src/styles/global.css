@@ -46,17 +46,14 @@
   --color-grey-100: #F2F2F2;
   --color-grey-50: #F5F5F5;
 
-  /* Hero gradient (kept for legacy) */
   --hero-gradient: linear-gradient(180deg, #FF6262 0%, #F9783A 64%, #F5891C 100%);
 
-  /* Typography — Playfair Display replaced with Inter globally per spec */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-dm: 'DM Sans', 'Inter', sans-serif;
   --font-serif: 'Inter', system-ui, sans-serif;
   --font-mono: 'Roboto Mono', monospace;
   --font-roboto: 'Roboto', sans-serif;
 
-  /* Layout */
   --screen-w: 412px;
   --nav-h: 72px;
   --radius-sm: 8px;
@@ -70,55 +67,40 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: var(--font-sans);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Lock the viewport: html + body fill exactly the dynamic viewport height.
+   Falls back to vh for older iOS. */
+html, body {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 /* Hide scrollbars everywhere but keep scroll behavior */
 *::-webkit-scrollbar { width: 0; height: 0; display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }
 
-/* Neutral desktop backdrop with centered mobile frame */
+/* MOBILE-FIRST: body simply contains #root, no centering tricks */
 body {
-  margin: 0;
-  background: #ECECEC;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100dvh;
+  background: var(--color-white);
 }
 
 #root {
+  /* Mobile: fill the viewport exactly */
   width: 100%;
-  max-width: var(--screen-w);
+  height: 100%;
   background: var(--color-white);
-  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   position: relative;
   overflow: hidden;
-}
-
-/* Render as a centered phone-shaped frame anywhere there's room
-   (lower breakpoint so the frame survives heavy browser zoom). */
-@media (min-width: 500px) {
-  body {
-    background:
-      radial-gradient(1200px 600px at 20% 0%, #f4f1ec, transparent),
-      radial-gradient(1200px 600px at 80% 100%, #eef2f1, transparent),
-      #E6E6E6;
-    padding: 24px 0;
-  }
-  #root {
-    width: 412px;
-    height: min(880px, calc(100dvh - 48px));
-    min-height: 0;
-    max-height: calc(100dvh - 48px);
-    border-radius: 36px;
-    box-shadow: var(--shadow-frame);
-    overflow: hidden;
-    border: 8px solid #111;
-  }
 }
 
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
@@ -126,17 +108,39 @@ input, textarea, select { font-family: inherit; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 
-/* Generic screen wrapper - vertically scrollable, no visible scrollbar.
-   BottomNav is sticky and takes its own height, so no padding hack needed. */
+/* Each screen is a flex column that fills #root and scrolls its own content */
 .screen {
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;             /* critical: lets flex-1 actually shrink so overflow works */
   display: flex;
   flex-direction: column;
   background: var(--color-white);
   overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
-
-.screen--no-nav { /* no special padding */ }
-
+.screen--no-nav { /* no special padding needed */ }
 .screen-scroll { flex: 1; overflow-y: auto; }
+
+/* ===== DESKTOP: wrap #root in a centered phone frame ===== */
+@media (min-width: 720px) {
+  body {
+    background:
+      radial-gradient(1200px 600px at 20% 0%, #f4f1ec, transparent),
+      radial-gradient(1200px 600px at 80% 100%, #eef2f1, transparent),
+      #E6E6E6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 0;
+  }
+  #root {
+    flex: 0 0 auto;
+    width: 412px;
+    height: min(880px, calc(100dvh - 48px));
+    max-height: calc(100dvh - 48px);
+    border-radius: 36px;
+    border: 8px solid #111;
+    box-shadow: var(--shadow-frame);
+  }
+}
