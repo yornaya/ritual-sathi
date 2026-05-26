@@ -1,0 +1,8 @@
+.ob2__form {
+  padding: 20px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+.ob2__spacer { flex: 1; min-height: 12px; }

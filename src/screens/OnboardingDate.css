@@ -1,0 +1,14 @@
+.obd__body { padding: 20px 24px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.obd__title { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
+.obd__sub { font-size: 13px; color: var(--color-grey-500); margin-bottom: 12px; }
+.obd__preview {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--color-peach);
+  color: var(--color-cocoa-3);
+  border-radius: var(--radius-md);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px;
+}
+.obd__preview strong { font-size: 16px; font-weight: 800; }
+.obd__footer { padding: 16px 24px calc(24px + env(safe-area-inset-bottom)); }

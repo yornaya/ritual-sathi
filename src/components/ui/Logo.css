@@ -1,0 +1,15 @@
+.rs-logo {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  display: inline-block;
+}
+.rs-logo--center { display: block; text-align: center; width: 100%; }
+.rs-logo__ritual { color: var(--brand-ritual); }
+.rs-logo__sathi  { color: var(--brand-sathi); }
+
+.rs-logo--sm { font-size: 20px; }
+.rs-logo--md { font-size: 28px; }
+.rs-logo--lg { font-size: 40px; }
+.rs-logo--xl { font-size: 52px; }

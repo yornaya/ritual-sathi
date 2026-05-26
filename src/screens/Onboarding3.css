@@ -1,0 +1,15 @@
+.ob3__body { padding: 12px 24px 24px; flex: 1; }
+.ob3__title {
+  font-family: var(--font-serif);
+  font-size: 22px; font-weight: 700;
+  margin-bottom: 8px;
+}
+.ob3__sub {
+  font-size: 13px; color: var(--color-grey-500); margin-bottom: 24px;
+}
+.ob3__grid {
+  display: flex; flex-wrap: wrap; gap: 12px;
+}
+.ob3__footer {
+  padding: 16px 24px calc(24px + env(safe-area-inset-bottom));
+}

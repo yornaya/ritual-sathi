@@ -1,0 +1,4 @@
+.ob4__body { padding: 20px 24px; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+.ob4__title { font-family: var(--font-serif); font-size: 22px; font-weight: 700; }
+.ob4__sub { font-size: 13px; color: var(--color-grey-500); }
+.ob4__footer { padding: 16px 24px calc(24px + env(safe-area-inset-bottom)); }

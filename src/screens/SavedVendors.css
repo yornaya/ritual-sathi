@@ -1,0 +1,13 @@
+.saved__body { padding: 12px 20px 40px; flex: 1; }
+.saved__list { display: flex; flex-direction: column; gap: 16px; }
+.saved__empty {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 80px 20px;
+  color: var(--color-grey-600);
+}
+.saved__empty-emoji { font-size: 48px; }
+.saved__cta {
+  margin-top: 8px;
+  background: var(--color-orange); color: var(--color-white);
+  padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 13px;
+}
