@@ -1,6 +1,7 @@
 .ceremony-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 8px;
   background: var(--color-grey-100);
   border: 2px solid transparent;
@@ -9,6 +10,7 @@
   padding: 10px 16px;
   border-radius: 999px;
   transition: all 0.15s ease;
+  min-width: 0;
 }
 .ceremony-chip.is-selected {
   background: var(--color-peach);
@@ -17,5 +19,11 @@
 }
 .ceremony-chip--sm { font-size: 12px; padding: 8px 12px; }
 .ceremony-chip--md { font-size: 14px; padding: 10px 16px; }
-.ceremony-chip--lg { font-size: 16px; padding: 14px 22px; }
-.ceremony-chip__emoji { font-size: 1.2em; }
+.ceremony-chip--lg { font-size: 15px; padding: 14px 18px; }
+.ceremony-chip__emoji { font-size: 1.2em; flex-shrink: 0; }
+.ceremony-chip__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}

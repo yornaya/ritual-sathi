@@ -29,7 +29,7 @@ export default function Home() {
         ].join(' ').toLowerCase();
         if (!haystack.includes(q)) return false;
       }
-      if (getVendorMinPrice(v) > state.user.budget) return false;
+      if (getVendorMinPrice(v, state.user.city) > state.user.budget) return false;
       return true;
     });
   }, [query, ceremonyKey, state.user.budget, state.user.city, t.lang]);

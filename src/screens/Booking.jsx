@@ -6,6 +6,7 @@ import VendorImage from '../components/ui/VendorImage.jsx';
 import { Input, Textarea, Select } from '../components/ui/Input.jsx';
 import {
   VENDORS_BY_ID, BUDGET_CATEGORIES, getVendorName, getVendorLocationString, getVendorPriceLabel,
+  getVendorMaxPrice,
 } from '../data/vendors.js';
 import { useApp, formatINR, formatDate } from '../context/AppContext.jsx';
 import { useModal } from '../context/ModalContext.jsx';
@@ -38,8 +39,8 @@ export default function Booking() {
   });
 
   const highestMenuPrice = useMemo(
-    () => (vendor ? Math.max(...vendor.menu.map(m => m.price)) : 0),
-    [vendor]
+    () => (vendor ? getVendorMaxPrice(vendor, state.user.city) : 0),
+    [vendor, state.user.city]
   );
   const computedAmount = useMemo(() => {
     if (!vendor) return 0;
@@ -63,7 +64,7 @@ export default function Booking() {
 
   const vendorName = getVendorName(vendor, t.lang);
   const vendorLocation = getVendorLocationString(vendor, state.user.city, t.lang, t);
-  const vendorPriceLabel = getVendorPriceLabel(vendor, ceremonyKey, t);
+  const vendorPriceLabel = getVendorPriceLabel(vendor, ceremonyKey, t, state.user.city);
   const dateLocale = t.lang === 'hi' ? 'hi-IN' : 'en-IN';
 
   const submit = async (e) => {

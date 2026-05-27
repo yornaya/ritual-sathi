@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button.jsx';
 import VendorImage from '../components/ui/VendorImage.jsx';
 import {
-  VENDORS_BY_ID, getVendorPriceLabel, getVendorName, getVendorLocation,
+  VENDORS_BY_ID, getVendorPriceLabel, getVendorName, getVendorLocation, getVendorMenu,
 } from '../data/vendors.js';
 import { useApp, formatINR } from '../context/AppContext.jsx';
 import { useT } from '../i18n/index.js';
@@ -26,10 +26,12 @@ export default function VendorDetail() {
 
   const saved = isVendorSaved(vendor.id);
   const ceremonyKey = state.user.ceremonies?.[0] || 'wedding';
-  const priceLabel = getVendorPriceLabel(vendor, ceremonyKey, t);
+  const city = state.user.city;
+  const priceLabel = getVendorPriceLabel(vendor, ceremonyKey, t, city);
   const name = getVendorName(vendor, t.lang);
-  const { locality, distanceKm } = getVendorLocation(vendor, state.user.city, t.lang);
-  const cityLabel = t(`city.${state.user.city}`);
+  const { locality, distanceKm } = getVendorLocation(vendor, city, t.lang);
+  const cityLabel = t(`city.${city}`);
+  const menu = getVendorMenu(vendor, city, t.lang);
 
   return (
     <div className="screen screen--no-nav vd">
@@ -66,9 +68,9 @@ export default function VendorDetail() {
 
         <h2 className="vd__sub">{t('vd.menu')}</h2>
         <ul className="vd__menu">
-          {vendor.menu.map((m, i) => (
+          {menu.map((m, i) => (
             <li key={i} className="vd__menu-item">
-              <span>{m.name}</span>
+              <span className="vd__menu-name">{m.name}</span>
               <span className="vd__menu-price">
                 {formatINR(m.price)}{vendor.priceUnit === 'plate' ? ' ' + t('vd.perPlate') : ''}
               </span>

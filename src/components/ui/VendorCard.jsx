@@ -11,7 +11,7 @@ export default function VendorCard({ vendor, ceremonyKey }) {
   const nav = useNavigate();
   const t = useT();
   const { state } = useApp();
-  const priceLabel = getVendorPriceLabel(vendor, ceremonyKey, t);
+  const priceLabel = getVendorPriceLabel(vendor, ceremonyKey, t, state.user.city);
   const name = getVendorName(vendor, t.lang);
   const location = getVendorLocationString(vendor, state.user.city, t.lang, t);
   return (

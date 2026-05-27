@@ -81,6 +81,8 @@ export default {
   'vd.priceLabel': 'Price',
   'vd.menu': 'Menu / Price List',
   'vd.perPlate': '/plate',
+  'price.from': 'From',
+  'cat.perPlate': 'Plate',
 
   // Booking
   'booking.ceremony': 'Ceremony',

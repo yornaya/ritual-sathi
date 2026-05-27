@@ -1,15 +1,29 @@
-.ob3__body { padding: 12px 24px 24px; flex: 1; }
+.ob3__body { padding: 12px 20px 24px; flex: 1; }
 .ob3__title {
-  font-family: var(--font-serif);
-  font-size: 22px; font-weight: 700;
+  font-size: 20px; font-weight: 800; letter-spacing: -0.3px;
   margin-bottom: 8px;
 }
 .ob3__sub {
-  font-size: 13px; color: var(--color-grey-500); margin-bottom: 24px;
+  font-size: 13px; color: var(--color-grey-500); margin-bottom: 22px;
 }
+
+/* 2-column grid keeps chips uniformly aligned regardless of label length
+   (Annaprashan vs Wedding). Each chip fills its cell. */
 .ob3__grid {
-  display: flex; flex-wrap: wrap; gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
+.ob3__grid .ceremony-chip {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 14px 10px;
+}
+
 .ob3__footer {
-  padding: 16px 24px calc(24px + env(safe-area-inset-bottom));
+  padding: 16px 20px calc(20px + env(safe-area-inset-bottom));
 }

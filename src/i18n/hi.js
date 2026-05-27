@@ -81,6 +81,8 @@ export default {
   'vd.priceLabel': 'मूल्य',
   'vd.menu': 'मेन्यू / मूल्य सूची',
   'vd.perPlate': '/प्लेट',
+  'price.from': 'से',
+  'cat.perPlate': 'प्लेट',
 
   // Booking
   'booking.ceremony': 'समारोह',
