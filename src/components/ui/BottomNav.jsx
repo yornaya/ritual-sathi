@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useT } from '../../i18n/index.js';
 import './BottomNav.css';
 
 const HomeIcon = ({ active }) => (
@@ -26,16 +27,17 @@ const ProfileIcon = ({ active }) => (
 );
 
 export default function BottomNav() {
+  const t = useT();
   return (
     <nav className="bottom-nav">
       <NavLink to="/home" className={({ isActive }) => `bn-item ${isActive ? 'active' : ''}`}>
-        {({ isActive }) => (<><HomeIcon active={isActive} /><span>Home</span></>)}
+        {({ isActive }) => (<><HomeIcon active={isActive} /><span>{t('nav.home')}</span></>)}
       </NavLink>
       <NavLink to="/budget" className={({ isActive }) => `bn-item ${isActive ? 'active' : ''}`}>
-        {({ isActive }) => (<><BudgetIcon active={isActive} /><span>Budget</span></>)}
+        {({ isActive }) => (<><BudgetIcon active={isActive} /><span>{t('nav.budget')}</span></>)}
       </NavLink>
       <NavLink to="/profile" className={({ isActive }) => `bn-item ${isActive ? 'active' : ''}`}>
-        {({ isActive }) => (<><ProfileIcon active={isActive} /><span>Profile</span></>)}
+        {({ isActive }) => (<><ProfileIcon active={isActive} /><span>{t('nav.profile')}</span></>)}
       </NavLink>
     </nav>
   );

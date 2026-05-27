@@ -1,6 +1,5 @@
 // Ceremonies — order, emoji, and entries per spec.
-// Order: Wedding, Annaprashan, Shradhh, Engagement, Upanayan, Anniversary.
-// Puja removed completely. Wedding emoji changed to 💝.
+// Translated labels live in src/i18n/{en,hi}.js under `ceremony.<key>`.
 export const CEREMONIES = [
   { key: 'wedding',     label: 'Wedding',     chip: 'WEDDING',     emoji: '💝' },
   { key: 'annaprashan', label: 'Annaprashan', chip: 'ANNAPRASHAN', emoji: '🐣' },
@@ -10,7 +9,5 @@ export const CEREMONIES = [
   { key: 'anniversary', label: 'Anniversary', chip: 'ANNIVERSARY', emoji: '🎂' },
 ];
 
-export const CITIES = [
-  'Kolkata', 'Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad',
-  'Chennai', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow',
-];
+// Locked to these 5 cities per spec.
+export const CITIES = ['Ahmedabad', 'Chennai', 'Delhi', 'Kolkata', 'Mumbai'];

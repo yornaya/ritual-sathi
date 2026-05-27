@@ -1,5 +1,7 @@
 .slider { width: 100%; padding: 8px 0; }
 .slider__value {
+  display: block;
+  width: 100%;
   text-align: center;
   font-family: var(--font-sans);
   font-size: 38px;
@@ -7,6 +9,36 @@
   color: var(--color-orange);
   margin-bottom: 18px;
   letter-spacing: -0.5px;
+  background: transparent;
+  border: none;
+  cursor: text;
+  padding: 4px 0;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+.slider__value:hover { background: var(--color-grey-50); }
+.slider__value--editing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: text;
+}
+.slider__value-prefix { font-size: 38px; font-weight: 800; color: var(--color-orange); }
+.slider__value-input {
+  font: inherit;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--color-orange);
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  width: 70%;
+  max-width: 280px;
+  letter-spacing: -0.5px;
+  border-bottom: 2px dashed var(--color-orange);
+  padding-bottom: 2px;
 }
 
 /* Track wrapper has the visual track centered and the range input sitting

@@ -4,20 +4,18 @@ import AppBar from '../components/ui/AppBar.jsx';
 import Button from '../components/ui/Button.jsx';
 import VendorImage from '../components/ui/VendorImage.jsx';
 import { Input, Textarea, Select } from '../components/ui/Input.jsx';
-import { VENDORS_BY_ID, BUDGET_CATEGORIES } from '../data/vendors.js';
-import { CEREMONIES } from '../data/ceremonies.js';
+import {
+  VENDORS_BY_ID, BUDGET_CATEGORIES, getVendorName, getVendorLocationString, getVendorPriceLabel,
+} from '../data/vendors.js';
 import { useApp, formatINR, formatDate } from '../context/AppContext.jsx';
 import { useModal } from '../context/ModalContext.jsx';
+import { useT } from '../i18n/index.js';
 import './Booking.css';
 
 const HOURS = Array.from({ length: 24 }, (_, h) => {
   const label = `${(h % 12) || 12}:00 ${h < 12 ? 'AM' : 'PM'}`;
   return { value: String(h).padStart(2, '0') + ':00', label };
 });
-
-function ceremonyLabel(key) {
-  return CEREMONIES.find(c => c.key === key)?.label || key || '—';
-}
 
 const DEFAULT_VENUE = 'Swapnobhor Hall & Lawn, New Town';
 
@@ -27,6 +25,7 @@ export default function Booking() {
   const vendor = VENDORS_BY_ID[vendorId];
   const { state, addBooking } = useApp();
   const modal = useModal();
+  const t = useT();
 
   const isCaterer = vendor?.category === 'CATERER';
 
@@ -51,7 +50,7 @@ export default function Booking() {
   if (!vendor) {
     return (
       <div className="screen screen--no-nav">
-        <AppBar title="Booking" />
+        <AppBar title={t('booking.ceremony')} />
         <p style={{ padding: 24 }}>Vendor not found.</p>
       </div>
     );
@@ -62,13 +61,19 @@ export default function Booking() {
   const overBudget = computedAmount > state.user.budget;
   const categoryKey = BUDGET_CATEGORIES.find(b => b.vendorCategory === vendor.category)?.key;
 
+  const vendorName = getVendorName(vendor, t.lang);
+  const vendorLocation = getVendorLocationString(vendor, state.user.city, t.lang, t);
+  const vendorPriceLabel = getVendorPriceLabel(vendor, ceremonyKey, t);
+  const dateLocale = t.lang === 'hi' ? 'hi-IN' : 'en-IN';
+
   const submit = async (e) => {
     e.preventDefault();
     if (overBudget) {
       const ok = await modal.confirm({
-        title: 'Over budget',
-        message: `This booking (${formatINR(computedAmount)}) exceeds your overall budget of ${formatINR(state.user.budget)}. Continue anyway?`,
-        confirmText: 'Continue',
+        title: t('booking.over.title'),
+        message: t('booking.over.body', { amount: formatINR(computedAmount), budget: formatINR(state.user.budget) }),
+        confirmText: t('btn.continueAnyway'),
+        cancelText: t('btn.cancel'),
         danger: true,
       });
       if (!ok) return;
@@ -76,6 +81,7 @@ export default function Booking() {
     addBooking({
       vendorId: vendor.id,
       vendorName: vendor.name,
+      vendorNameHi: vendor.nameHi,
       vendorCategory: vendor.category,
       categoryKey,
       ceremony: ceremonyKey,
@@ -98,68 +104,60 @@ export default function Booking() {
         <div className="booking__vendor">
           <VendorImage vendor={vendor} className="booking__vendor-img" />
           <div>
-            <div className="booking__vendor-name">{vendor.name}</div>
-            <div className="booking__vendor-meta">{vendor.location} · {vendor.priceLabel}</div>
+            <div className="booking__vendor-name">{vendorName}</div>
+            <div className="booking__vendor-meta">{vendorLocation} · {vendorPriceLabel}</div>
           </div>
         </div>
 
         <div className="booking__readonly">
           <div className="booking__ro-row">
-            <span className="booking__ro-label">Ceremony</span>
-            <span className="booking__ro-value">{ceremonyLabel(ceremonyKey)}</span>
+            <span className="booking__ro-label">{t('booking.ceremony')}</span>
+            <span className="booking__ro-value">{t(`ceremony.${ceremonyKey}`)}</span>
           </div>
           <div className="booking__ro-row">
-            <span className="booking__ro-label">Date</span>
-            <span className="booking__ro-value">{ceremonyDate ? formatDate(ceremonyDate) : 'Not set'}</span>
+            <span className="booking__ro-label">{t('booking.date')}</span>
+            <span className="booking__ro-value">{ceremonyDate ? formatDate(ceremonyDate, dateLocale) : t('booking.notSet')}</span>
           </div>
         </div>
 
         <div className="booking__time-block">
-          <span className="booking__label">Time</span>
+          <span className="booking__label">{t('booking.time')}</span>
           <div className="booking__time-row">
             <Select
               value={form.timeFrom}
               onChange={(v) => setForm({ ...form, timeFrom: v })}
               options={HOURS}
-              placeholder="From"
+              placeholder={t('booking.timeFrom')}
             />
-            <span className="booking__time-to">To</span>
+            <span className="booking__time-to">{t('booking.timeTo')}</span>
             <Select
               value={form.timeTo}
               onChange={(v) => setForm({ ...form, timeTo: v })}
               options={HOURS}
-              placeholder="To"
+              placeholder={t('booking.timeTo')}
             />
           </div>
         </div>
 
         {isCaterer && (
           <Input
-            label="Number of Guests"
+            label={t('booking.guests')}
             type="number"
             value={form.guests}
             onChange={(v) => setForm({ ...form, guests: Math.max(1, Number(v) || 1) })}
           />
         )}
 
-        <Input
-          label="Venue Location"
-          value={form.venue}
-          onChange={(v) => setForm({ ...form, venue: v })}
-        />
+        <Input label={t('booking.venue')} value={form.venue} onChange={(v) => setForm({ ...form, venue: v })} />
 
-        <Textarea
-          label="Special Requirements"
-          value={form.notes}
-          onChange={(v) => setForm({ ...form, notes: v })}
-        />
+        <Textarea label={t('booking.notes')} value={form.notes} onChange={(v) => setForm({ ...form, notes: v })} />
 
         <div className={`booking__estimate ${overBudget ? 'booking__estimate--over' : ''}`}>
-          <span>Estimated Cost</span>
+          <span>{t('booking.estimate')}</span>
           <strong>{formatINR(computedAmount)}</strong>
         </div>
 
-        <Button type="submit" size="block" disabled={!form.venue}>CONFIRM BOOKING →</Button>
+        <Button type="submit" size="block" disabled={!form.venue}>{t('btn.confirmBooking')}</Button>
       </form>
     </div>
   );

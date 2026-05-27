@@ -4,13 +4,15 @@ import VendorCard from '../components/ui/VendorCard.jsx';
 import Logo from '../components/ui/Logo.jsx';
 import { SearchIcon, WalletIcon, PinIcon, CalendarIcon } from '../components/ui/Icons.jsx';
 import {
-  VENDORS, filterVendorsByCeremony, getVendorMinPrice,
+  VENDORS, filterVendorsByCeremony, getVendorMinPrice, getVendorName, getVendorLocationString,
 } from '../data/vendors.js';
 import { useApp, formatLakhs, formatShortDate } from '../context/AppContext.jsx';
+import { useT } from '../i18n/index.js';
 import './Home.css';
 
 export default function Home() {
   const { state } = useApp();
+  const t = useT();
   const [query, setQuery] = useState('');
 
   const ceremonyKey = state.user.ceremonies?.[0] || 'wedding';
@@ -19,13 +21,20 @@ export default function Home() {
     const q = query.trim().toLowerCase();
     const eligible = filterVendorsByCeremony(VENDORS, ceremonyKey);
     return eligible.filter(v => {
-      if (q && !(`${v.name} ${v.category} ${v.location}`.toLowerCase().includes(q))) return false;
-      // Use the cheapest menu item for the budget-fit gate so cards still appear when
-      // *any* package fits the user's budget.
+      if (q) {
+        // Search across English + Hindi names + the localised location
+        const haystack = [
+          v.name, v.nameHi || '', v.category,
+          getVendorLocationString(v, state.user.city, t.lang),
+        ].join(' ').toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
       if (getVendorMinPrice(v) > state.user.budget) return false;
       return true;
     });
-  }, [query, ceremonyKey, state.user.budget]);
+  }, [query, ceremonyKey, state.user.budget, state.user.city, t.lang]);
+
+  const dateLocale = t.lang === 'hi' ? 'hi-IN' : 'en-IN';
 
   return (
     <div className="screen home">
@@ -36,7 +45,7 @@ export default function Home() {
       <div className="home__search">
         <SearchIcon size={18} />
         <input
-          placeholder="Search for vendors"
+          placeholder={t('home.search')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -46,27 +55,29 @@ export default function Home() {
         <div className="home__info-cell">
           <div className="home__info-icon"><WalletIcon size={18} color="#F07F37" /></div>
           <div className="home__info-value">{formatLakhs(state.user.budget)}</div>
-          <div className="home__info-label">Budget</div>
+          <div className="home__info-label">{t('home.budget')}</div>
         </div>
         <div className="home__info-divider" />
         <div className="home__info-cell">
           <div className="home__info-icon"><PinIcon size={18} color="#F07F37" /></div>
-          <div className="home__info-value">{state.user.city || '—'}</div>
-          <div className="home__info-label">Location</div>
+          <div className="home__info-value">{t(`city.${state.user.city}`)}</div>
+          <div className="home__info-label">{t('home.location')}</div>
         </div>
         <div className="home__info-divider" />
         <div className="home__info-cell">
           <div className="home__info-icon"><CalendarIcon size={18} color="#F07F37" /></div>
-          <div className="home__info-value">{state.user.ceremonyDate ? formatShortDate(state.user.ceremonyDate) : '—'}</div>
-          <div className="home__info-label">Date</div>
+          <div className="home__info-value">
+            {state.user.ceremonyDate ? formatShortDate(state.user.ceremonyDate, dateLocale) : '—'}
+          </div>
+          <div className="home__info-label">{t('home.date')}</div>
         </div>
       </section>
 
       <section className="home__section">
-        <h2 className="home__section-title">High-Rated Vendors Near You</h2>
+        <h2 className="home__section-title">{t('home.section.highRated')}</h2>
         <div className="home__list">
           {filteredVendors.length === 0
-            ? <p className="home__empty">No vendors available for this ceremony / budget. Try a different ceremony or raise your budget.</p>
+            ? <p className="home__empty">{t('home.empty')}</p>
             : filteredVendors.map(v => (
               <VendorCard key={v.id} vendor={v} ceremonyKey={ceremonyKey} />
             ))

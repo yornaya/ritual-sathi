@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { CITIES } from '../data/ceremonies.js';
 
 const AppContext = createContext(null);
 
-const STORAGE_KEY = 'ritual-sathi-state-v5';
+const STORAGE_KEY = 'ritual-sathi-state-v6';
 
 function defaultCeremonyDate() {
   return new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString().slice(0, 10);
@@ -15,6 +16,7 @@ const DEFAULT_STATE = {
     email: 'ranjanghosh@gmail.com',
     password: '••••••••',
     city: 'Kolkata',
+    language: 'en',
     ceremonies: ['wedding'],
     ceremonyDate: defaultCeremonyDate(),
     budget: 2500000,
@@ -31,11 +33,15 @@ function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
     const parsed = JSON.parse(raw);
-    return {
+    const merged = {
       ...DEFAULT_STATE,
       ...parsed,
       user: { ...DEFAULT_STATE.user, ...(parsed.user || {}) },
     };
+    // Migration: if stored city isn't one of the supported 5, snap to default.
+    if (!CITIES.includes(merged.user.city)) merged.user.city = DEFAULT_STATE.user.city;
+    if (!['en', 'hi'].includes(merged.user.language)) merged.user.language = 'en';
+    return merged;
   } catch {
     return DEFAULT_STATE;
   }
@@ -63,6 +69,7 @@ export function AppProvider({ children }) {
     setBudget: (budget) => setState(s => ({ ...s, user: { ...s.user, budget } })),
     setCeremonies: (keys) => setState(s => ({ ...s, user: { ...s.user, ceremonies: keys } })),
     setCity: (city) => setState(s => ({ ...s, user: { ...s.user, city } })),
+    setLanguage: (language) => setState(s => ({ ...s, user: { ...s.user, language } })),
     setCeremonyDate: (date) => setState(s => ({ ...s, user: { ...s.user, ceremonyDate: date } })),
     completeOnboarding: () => setState(s => ({ ...s, isAuthed: true })),
     logout: () => {
@@ -96,7 +103,6 @@ export function useApp() {
   return ctx;
 }
 
-// Currency helpers
 export function formatINR(n) {
   if (n === null || n === undefined || isNaN(n)) return '₹0';
   return '₹' + Number(n).toLocaleString('en-IN');
@@ -108,19 +114,19 @@ export function formatLakhs(n) {
   return formatINR(n);
 }
 
-export function formatDate(iso) {
+export function formatDate(iso, locale = 'en-IN') {
   if (!iso) return '';
   try {
-    return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    return new Date(iso).toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' });
   } catch {
     return iso;
   }
 }
 
-export function formatShortDate(iso) {
+export function formatShortDate(iso, locale = 'en-IN') {
   if (!iso) return '';
   try {
-    return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+    return new Date(iso).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
   } catch {
     return iso;
   }

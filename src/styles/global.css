@@ -137,9 +137,9 @@ img { display: block; max-width: 100%; }
   #root {
     flex: 0 0 auto;
     width: 412px;
-    height: min(880px, calc(100dvh - 48px));
+    height: min(820px, calc(100dvh - 48px));
     max-height: calc(100dvh - 48px);
-    border-radius: 36px;
+    border-radius: 32px;
     border: 8px solid #111;
     box-shadow: var(--shadow-frame);
   }
