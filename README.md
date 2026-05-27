@@ -1,9 +1,13 @@
-# RitualSathi — Mobile Web App
+# RitualSathi — Ceremony Vendor Aggregator
 
-React + Vite implementation of the RitualSathi Figma prototype (Design Thinking course project).
-A ritual-vendor aggregator for Indian ceremonies: weddings, annaprashan, shradhh, upanayan, engagement, anniversary, puja.
+A mobile-first web application built with **React + Vite** for planning and booking vendors across Indian ceremonies.
 
-## Quick start
+**Live Demo:** [ritual-sathi.vercel.app](https://ritual-sathi.vercel.app/)
+> Best viewed in mobile / responsive mode (412 x 1091 px).
+
+---
+
+## Local Development
 
 ```bash
 cd ritual-sathi
@@ -11,63 +15,101 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL (usually `http://localhost:5173`). Best viewed in **mobile / responsive mode** (412×1091).
+Open the printed local URL (usually `http://localhost:5173`) in your browser and enable mobile/responsive view in DevTools.
 
-## Project structure
-
-```
-src/
-  main.jsx              # React entry — wraps app in Router + AppProvider
-  App.jsx               # Routes (React Router)
-  context/
-    AppContext.jsx      # Centralized app state (user, budget, bookings, saved vendors)
-  data/
-    vendors.js          # All vendors + budget category mapping
-    ceremonies.js       # Ceremony list + city list
-  components/ui/        # Reusable: StatusBar, BottomNav, Button, Input, Slider,
-                        # VendorCard, AppBar, CeremonyChip (each with own CSS)
-  screens/              # One file per screen + its own CSS
-    Splash.jsx
-    Onboarding1..5.jsx
-    Home.jsx
-    VendorDetail.jsx
-    Booking.jsx
-    BookingConfirmed.jsx
-    BudgetPlanner.jsx
-    Profile.jsx
-    SavedVendors.jsx
-    Bookings.jsx
-  styles/global.css     # Design tokens (colors, fonts, layout) from Figma
-```
-
-## Flow (matches Figma exactly)
-
-1. **Splash** → auto-routes after ~1.8s
-2. **Onboarding 1** "Plan every ceremony, effortlessly" → Sign Up / Get Started
-3. **Onboarding 2** Create Account form
-4. **Onboarding 3** Pick ceremonies (multi-select chips)
-5. **Onboarding 4** Budget slider (₹0 – ₹50 L, default ₹25 L)
-6. **Onboarding 5** Pick city → DONE!
-7. **Home** Search + ceremony chips + vendor list (filtered to fit budget)
-8. **Vendor Detail** Photo, rating, menu/price list, BOOK NOW, save (♡)
-9. **Booking** Form with sliders → CONFIRM BOOKING
-10. **Booking Confirmed** Reference code → BACK TO HOME
-11. **Budget Planner** Hero card showing budget from onboarding, 6 categories
-12. **Profile** Stats, ceremonies, vendors, saved, bookings, account, log out
-13. **Saved Vendors** / **My Bookings** screens off Profile
+---
 
 ## Features
 
-- **Slider-driven budget** — set in Onboarding 4, used in Home filter, Booking form, Budget Planner
-- **All vendors bookable** with category-aware cost calculation (plate-based vs day-based vs event-based)
-- **Bottom nav** wired to Home / Budget / Profile across all main screens
-- **Saved vendors** — heart icon on vendor detail; viewable from Profile
-- **Bookings persisted** — split into Upcoming / Past on Profile › My Bookings
-- **Log out** wipes state and returns to Splash
-- **State persisted** to `localStorage` (`ritual-sathi-state-v1`) so refresh keeps everything
+### Onboarding & Personalization
+- Multi-step onboarding collects ceremony preferences, city, and budget before the user reaches the Home screen
+- **Budget slider** (Rs. 0 – Rs. 50 Lakh, default Rs. 25 L) is configured once during onboarding and propagates across the entire app
+- **Multi-select ceremony chips** allow users to tag all ceremonies they are planning in a single step
 
-## Design tokens
+### Vendor Discovery & Booking
+- **Smart vendor feed** on the Home screen automatically filters vendors to fit within the user's configured budget
+- **Search** vendors by name or service category
+- **Vendor Detail** page displays photos, ratings, a full service menu, and itemized pricing
+- **Flexible cost calculation** — vendors are priced by plate count, event duration, or per-event basis depending on their category
+- **Save vendors** using the heart icon on the Vendor Detail page for quick access later
 
-All colors/fonts come straight from the Figma export — see CSS variables at top of `src/styles/global.css`.
-Hero gradient: `linear-gradient(180deg, #FF6262 0%, #F9783A 64%, #F5891C 100%)`.
-Fonts: Inter (UI), Playfair Display (display), Roboto Mono (refs/codes).
+### Booking Management
+- **Booking form** features interactive sliders for guest count and date selection with a real-time cost preview
+- Each confirmed booking generates a unique **reference code**
+- **My Bookings** screen organises bookings into **Upcoming** and **Past** tabs
+
+### Budget Planner
+- Dedicated Budget Planner screen with a hero card displaying the user's remaining balance
+- Breaks down spending across 6 ceremony categories at a glance
+
+### Profile & State Persistence
+- Profile screen surfaces personal stats: ceremonies planned, vendors saved, and bookings made
+- All application state (bookings, saved vendors, user profile) is **persisted to `localStorage`** under the key `ritual-sathi-state-v1`, ensuring data survives a page refresh
+- **Log out** clears all persisted state and redirects to the Splash screen
+
+### Internationalisation
+- i18n support scaffolded under `src/i18n/` for future multi-language expansion
+
+---
+
+## Project Structure
+
+```
+ritual-sathi/
+├── src/
+│   ├── main.jsx                  # Entry point — mounts app inside Router + AppProvider
+│   ├── App.jsx                   # Route definitions (React Router v6)
+│   │
+│   ├── context/
+│   │   └── AppContext.jsx        # Global state: user, budget, bookings, saved vendors
+│   │
+│   ├── data/
+│   │   ├── vendors.js            # Vendor catalogue + budget-category mapping
+│   │   └── ceremonies.js         # Ceremony list + supported cities
+│   │
+│   ├── components/
+│   │   └── ui/                   # Reusable UI components (each with co-located CSS)
+│   │       ├── StatusBar
+│   │       ├── BottomNav
+│   │       ├── Button
+│   │       ├── Input
+│   │       ├── Slider
+│   │       ├── VendorCard
+│   │       ├── AppBar
+│   │       └── CeremonyChip
+│   │
+│   ├── screens/                  # One file per screen + co-located CSS
+│   │   ├── Splash.jsx
+│   │   ├── Onboarding1-5.jsx
+│   │   ├── Home.jsx
+│   │   ├── VendorDetail.jsx
+│   │   ├── Booking.jsx
+│   │   ├── BookingConfirmed.jsx
+│   │   ├── BudgetPlanner.jsx
+│   │   ├── Profile.jsx
+│   │   ├── SavedVendors.jsx
+│   │   └── Bookings.jsx
+│   │
+│   ├── i18n/                     # Internationalisation stubs
+│   └── styles/
+│       └── global.css            # Global CSS variables, fonts, and layout resets
+```
+
+---
+
+## Tech Stack
+
+| Layer     | Technology                           |
+|-----------|--------------------------------------|
+| Framework | React 18                             |
+| Bundler   | Vite                                 |
+| Routing   | React Router v6                      |
+| State     | React Context API + localStorage     |
+| Styling   | Plain CSS (co-located per component) |
+| Fonts     | Inter, DM Sans, Roboto               |
+
+---
+
+## Supported Ceremonies
+
+Wedding · Annaprashan · Shraadh · Upanayan · Engagement · Anniversary
