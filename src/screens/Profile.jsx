@@ -64,7 +64,7 @@ export default function Profile() {
           <span>Bookings</span>
         </div>
         <div className="profile__stat profile__stat--mid">
-          <strong>{state.bookings.length}</strong>
+          <strong>0</strong>
           <span>Reviews</span>
         </div>
         <div className="profile__stat">

@@ -3,7 +3,9 @@ import BottomNav from '../components/ui/BottomNav.jsx';
 import VendorCard from '../components/ui/VendorCard.jsx';
 import Logo from '../components/ui/Logo.jsx';
 import { SearchIcon, WalletIcon, PinIcon, CalendarIcon } from '../components/ui/Icons.jsx';
-import { VENDORS } from '../data/vendors.js';
+import {
+  VENDORS, filterVendorsByCeremony, getVendorMinPrice,
+} from '../data/vendors.js';
 import { useApp, formatLakhs, formatShortDate } from '../context/AppContext.jsx';
 import './Home.css';
 
@@ -11,14 +13,19 @@ export default function Home() {
   const { state } = useApp();
   const [query, setQuery] = useState('');
 
+  const ceremonyKey = state.user.ceremonies?.[0] || 'wedding';
+
   const filteredVendors = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return VENDORS.filter(v => {
+    const eligible = filterVendorsByCeremony(VENDORS, ceremonyKey);
+    return eligible.filter(v => {
       if (q && !(`${v.name} ${v.category} ${v.location}`.toLowerCase().includes(q))) return false;
-      if (v.basePrice > state.user.budget) return false;
+      // Use the cheapest menu item for the budget-fit gate so cards still appear when
+      // *any* package fits the user's budget.
+      if (getVendorMinPrice(v) > state.user.budget) return false;
       return true;
     });
-  }, [query, state.user.budget]);
+  }, [query, ceremonyKey, state.user.budget]);
 
   return (
     <div className="screen home">
@@ -35,7 +42,6 @@ export default function Home() {
         />
       </div>
 
-      {/* Info card replacing the old peach pill */}
       <section className="home__info">
         <div className="home__info-cell">
           <div className="home__info-icon"><WalletIcon size={18} color="#F07F37" /></div>
@@ -60,8 +66,10 @@ export default function Home() {
         <h2 className="home__section-title">High-Rated Vendors Near You</h2>
         <div className="home__list">
           {filteredVendors.length === 0
-            ? <p className="home__empty">No vendors fit your budget. Try increasing it from Budget Planner.</p>
-            : filteredVendors.map(v => <VendorCard key={v.id} vendor={v} />)
+            ? <p className="home__empty">No vendors available for this ceremony / budget. Try a different ceremony or raise your budget.</p>
+            : filteredVendors.map(v => (
+              <VendorCard key={v.id} vendor={v} ceremonyKey={ceremonyKey} />
+            ))
           }
         </div>
       </section>

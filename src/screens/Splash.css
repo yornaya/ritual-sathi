@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 24px;
+  padding: calc(env(safe-area-inset-top) + 24px) 24px 24px;
   text-align: center;
 }
 .splash__tag {

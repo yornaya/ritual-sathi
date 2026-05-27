@@ -15,8 +15,6 @@ export const VENDORS = [
     rating: 4.9,
     reviews: 82,
     events: '200+',
-    priceLabel: '₹750 / Plate',
-    basePrice: 750,
     priceUnit: 'plate',
     image: local('shri-santosh-catering'),
     fallbackImage: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=800',
@@ -36,8 +34,6 @@ export const VENDORS = [
     rating: 4.8,
     reviews: 64,
     events: '120+',
-    priceLabel: '₹25,000 - 35,000 / Day',
-    basePrice: 30000,
     priceUnit: 'day',
     image: local('subhajit-photography'),
     fallbackImage: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800',
@@ -57,8 +53,6 @@ export const VENDORS = [
     rating: 4.7,
     reviews: 41,
     events: '90+',
-    priceLabel: 'From ₹1.5 Lakhs',
-    basePrice: 150000,
     priceUnit: 'event',
     image: local('vandana-decor'),
     fallbackImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800',
@@ -78,16 +72,14 @@ export const VENDORS = [
     rating: 4.9,
     reviews: 130,
     events: '500+',
-    priceLabel: '₹15,000 / Day',
-    basePrice: 15000,
     priceUnit: 'day',
     image: local('pandit-ramesh-sharma'),
     fallbackImage: 'https://images.unsplash.com/photo-1604608672516-f1b9bca0a9b3?w=800',
+    // 'Griha Pravesh / Puja' removed per spec.
     menu: [
       { name: 'Wedding ceremony', price: 21000 },
       { name: 'Annaprashan / Upanayan', price: 11000 },
       { name: 'Shradhh', price: 9000 },
-      { name: 'Griha Pravesh / Puja', price: 7500 },
     ],
   },
   {
@@ -99,8 +91,6 @@ export const VENDORS = [
     rating: 4.6,
     reviews: 53,
     events: '80+',
-    priceLabel: '₹50,000 / Day',
-    basePrice: 50000,
     priceUnit: 'day',
     image: local('phoolwala'),
     fallbackImage: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=800',
@@ -120,8 +110,6 @@ export const VENDORS = [
     rating: 4.5,
     reviews: 29,
     events: '60+',
-    priceLabel: '₹20,000 / Day',
-    basePrice: 20000,
     priceUnit: 'day',
     image: local('beats-by-arun'),
     fallbackImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800',
@@ -141,8 +129,6 @@ export const VENDORS = [
     rating: 4.4,
     reviews: 22,
     events: '40+',
-    priceLabel: '₹35,000 / Day',
-    basePrice: 35000,
     priceUnit: 'day',
     image: local('glow-lights'),
     fallbackImage: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800',
@@ -159,10 +145,69 @@ export const VENDORS_BY_ID = Object.fromEntries(VENDORS.map(v => [v.id, v]));
 
 // Budget Planner categories with their mapped vendor category & emoji from Figma
 export const BUDGET_CATEGORIES = [
-  { key: 'decoration', label: 'Decoration', emoji: '🎨', vendorCategory: 'DECORATOR', share: 0.32 },
-  { key: 'photography', label: 'Photography', emoji: '📸', vendorCategory: 'PHOTOGRAPHER', share: 0.25 },
-  { key: 'priest', label: 'Priest / Rituals', emoji: '🛕', vendorCategory: 'PANDIT', share: 0.06 },
-  { key: 'music', label: 'Music / Sound', emoji: '🎵', vendorCategory: 'MUSIC', share: 0.012 },
-  { key: 'lights', label: 'Lights', emoji: '💡', vendorCategory: 'LIGHTS', share: 0.038 },
-  { key: 'catering', label: 'Catering', emoji: '🍽️', vendorCategory: 'CATERER', share: 0.30 },
+  { key: 'decoration',  label: 'Decoration',       emoji: '🎨',  vendorCategory: 'DECORATOR',    share: 0.32 },
+  { key: 'photography', label: 'Photography',      emoji: '📸',  vendorCategory: 'PHOTOGRAPHER', share: 0.25 },
+  { key: 'priest',      label: 'Priest / Rituals', emoji: '🛕',  vendorCategory: 'PANDIT',       share: 0.06 },
+  { key: 'music',       label: 'Music / Sound',    emoji: '🎵',  vendorCategory: 'MUSIC',        share: 0.012 },
+  { key: 'lights',      label: 'Lights',           emoji: '💡',  vendorCategory: 'LIGHTS',       share: 0.038 },
+  { key: 'catering',    label: 'Catering',         emoji: '🍽️', vendorCategory: 'CATERER',      share: 0.30 },
 ];
+
+// ===== Helpers =====
+
+// Map ceremony key -> menu item name on the pandit's price list
+const PANDIT_CEREMONY_TO_MENU = {
+  wedding: 'Wedding ceremony',
+  annaprashan: 'Annaprashan / Upanayan',
+  upanayan: 'Annaprashan / Upanayan',
+  shradhh: 'Shradhh',
+};
+
+// Which vendor categories to hide for a given ceremony
+const HIDDEN_CATEGORIES_BY_CEREMONY = {
+  anniversary: new Set(['PANDIT']),
+  engagement:  new Set(['PANDIT']),
+  shradhh:     new Set(['PHOTOGRAPHER', 'MUSIC', 'LIGHTS']),
+};
+
+/** Filter the vendor list to only those bookable for the given ceremony. */
+export function filterVendorsByCeremony(vendors, ceremonyKey) {
+  const hidden = HIDDEN_CATEGORIES_BY_CEREMONY[ceremonyKey];
+  if (!hidden) return vendors;
+  return vendors.filter(v => !hidden.has(v.category));
+}
+
+function formatINR(n) {
+  return '₹' + Number(n).toLocaleString('en-IN');
+}
+
+/**
+ * Display label rule (per spec):
+ *  - CATERER: max plate price as "₹X / Plate"
+ *  - PANDIT:  exact price of the selected ceremony
+ *  - Everyone else: "From ₹<min menu price>"
+ */
+export function getVendorPriceLabel(vendor, ceremonyKey) {
+  if (!vendor?.menu?.length) return '';
+
+  if (vendor.category === 'CATERER') {
+    const max = Math.max(...vendor.menu.map(m => m.price));
+    return `${formatINR(max)} / Plate`;
+  }
+
+  if (vendor.category === 'PANDIT') {
+    const targetName = PANDIT_CEREMONY_TO_MENU[ceremonyKey];
+    const item = vendor.menu.find(m => m.name === targetName);
+    const price = item ? item.price : vendor.menu[0].price; // fallback for unmapped ceremonies
+    return formatINR(price);
+  }
+
+  const min = Math.min(...vendor.menu.map(m => m.price));
+  return `From ${formatINR(min)}`;
+}
+
+/** Lowest possible booking cost for budget-fit filtering. */
+export function getVendorMinPrice(vendor) {
+  if (!vendor?.menu?.length) return 0;
+  return Math.min(...vendor.menu.map(m => m.price));
+}

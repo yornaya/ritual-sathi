@@ -9,6 +9,7 @@ export default function SavedVendors() {
   const { state } = useApp();
   const nav = useNavigate();
   const saved = state.savedVendors.map(id => VENDORS_BY_ID[id]).filter(Boolean);
+  const ceremonyKey = state.user.ceremonies?.[0] || 'wedding';
 
   return (
     <div className="screen screen--no-nav saved">
@@ -22,7 +23,7 @@ export default function SavedVendors() {
           </div>
         ) : (
           <div className="saved__list">
-            {saved.map(v => <VendorCard key={v.id} vendor={v} />)}
+            {saved.map(v => <VendorCard key={v.id} vendor={v} ceremonyKey={ceremonyKey} />)}
           </div>
         )}
       </div>

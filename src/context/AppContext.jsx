@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 const AppContext = createContext(null);
 
-const STORAGE_KEY = 'ritual-sathi-state-v4';
+const STORAGE_KEY = 'ritual-sathi-state-v5';
 
 function defaultCeremonyDate() {
   return new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString().slice(0, 10);

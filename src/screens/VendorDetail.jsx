@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button.jsx';
 import VendorImage from '../components/ui/VendorImage.jsx';
-import { VENDORS_BY_ID } from '../data/vendors.js';
+import { VENDORS_BY_ID, getVendorPriceLabel } from '../data/vendors.js';
 import { useApp, formatINR } from '../context/AppContext.jsx';
 import './VendorDetail.css';
 
@@ -9,7 +9,7 @@ export default function VendorDetail() {
   const { id } = useParams();
   const nav = useNavigate();
   const vendor = VENDORS_BY_ID[id];
-  const { toggleSavedVendor, isVendorSaved } = useApp();
+  const { state, toggleSavedVendor, isVendorSaved } = useApp();
 
   if (!vendor) {
     return (
@@ -21,6 +21,8 @@ export default function VendorDetail() {
   }
 
   const saved = isVendorSaved(vendor.id);
+  const ceremonyKey = state.user.ceremonies?.[0] || 'wedding';
+  const priceLabel = getVendorPriceLabel(vendor, ceremonyKey);
 
   return (
     <div className="screen screen--no-nav vd">
@@ -48,6 +50,11 @@ export default function VendorDetail() {
           <span>({vendor.reviews} Reviews)</span>
           <span>·</span>
           <span>{vendor.events} Events</span>
+        </div>
+
+        <div className="vd__price-banner">
+          <span>Price</span>
+          <strong>{priceLabel}</strong>
         </div>
 
         <h2 className="vd__sub">Menu / Price List</h2>
