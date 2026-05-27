@@ -26,7 +26,7 @@ export default function Slider({ value, min = 0, max = 100, step = 1, onChange, 
   const commit = () => {
     const n = Number(draft.replace(/[^\d.]/g, ''));
     if (!isNaN(n)) {
-      const clamped = Math.max(min, Math.min(max, Math.round(n / step) * step));
+      const clamped = Math.max(min, Math.min(max, Math.round(n)));
       onChange?.(clamped);
     }
     setEditing(false);
