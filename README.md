@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL (usually `http://localhost:5173`) in your browser and enable mobile/responsive view in DevTools.
+Open the printed local URL (usually `http://localhost:5173`) in your browser.
 
 ---
 
