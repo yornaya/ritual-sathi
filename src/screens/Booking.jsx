@@ -6,7 +6,7 @@ import VendorImage from '../components/ui/VendorImage.jsx';
 import { Input, Textarea, Select } from '../components/ui/Input.jsx';
 import {
   VENDORS_BY_ID, BUDGET_CATEGORIES, getVendorName, getVendorLocationString, getVendorPriceLabel,
-  getVendorMaxPrice,
+  getVendorMaxPrice, getVendorMenu,
 } from '../data/vendors.js';
 import { useApp, formatINR, formatDate } from '../context/AppContext.jsx';
 import { useModal } from '../context/ModalContext.jsx';
@@ -18,7 +18,13 @@ const HOURS = Array.from({ length: 24 }, (_, h) => {
   return { value: String(h).padStart(2, '0') + ':00', label };
 });
 
-const DEFAULT_VENUE = 'Swapnobhor Hall & Lawn, New Town';
+const DEFAULT_VENUES = {
+  Kolkata:   'Swapnobhor Hall & Lawn, New Town',
+  Mumbai:    'The Grand Pavilion, Bandra West',
+  Delhi:     'Regal Banquet Hall, Saket',
+  Chennai:   'Sri Lakshmi Gardens, T. Nagar',
+  Ahmedabad: 'Shree Mangalam Hall, Bodakdev',
+};
 
 export default function Booking() {
   const { vendorId } = useParams();
@@ -29,24 +35,38 @@ export default function Booking() {
   const t = useT();
 
   const isCaterer = vendor?.category === 'CATERER';
+  const isPandit  = vendor?.category === 'PANDIT';
+
+  const menuItems = vendor
+    ? getVendorMenu(vendor, state.user.city, t.lang)
+    : [];
+
+  const defaultService = menuItems.reduce(
+    (max, item) => (item.price > (max?.price ?? -1) ? item : max),
+    null
+  );
 
   const [form, setForm] = useState({
     timeFrom: '18:00',
     timeTo: '23:00',
     guests: 200,
-    venue: DEFAULT_VENUE,
+    venue: DEFAULT_VENUES[state.user.city] || '',
     notes: '',
+    selectedService: defaultService?.name ?? '',
   });
 
-  const highestMenuPrice = useMemo(
-    () => (vendor ? getVendorMaxPrice(vendor, state.user.city) : 0),
-    [vendor, state.user.city]
-  );
+  const selectedMenuPrice = useMemo(() => {
+    if (!vendor) return 0;
+    if (isPandit) return getVendorMaxPrice(vendor, state.user.city);
+    const item = menuItems.find(m => m.name === form.selectedService);
+    return item?.price ?? getVendorMaxPrice(vendor, state.user.city);
+  }, [vendor, isPandit, menuItems, form.selectedService, state.user.city]);
+
   const computedAmount = useMemo(() => {
     if (!vendor) return 0;
-    if (isCaterer) return highestMenuPrice * Math.max(1, Number(form.guests) || 1);
-    return highestMenuPrice;
-  }, [vendor, isCaterer, highestMenuPrice, form.guests]);
+    if (isCaterer) return selectedMenuPrice * Math.max(1, Number(form.guests) || 1);
+    return selectedMenuPrice;
+  }, [vendor, isCaterer, selectedMenuPrice, form.guests]);
 
   if (!vendor) {
     return (
@@ -146,6 +166,18 @@ export default function Booking() {
             type="number"
             value={form.guests}
             onChange={(v) => setForm({ ...form, guests: Math.max(1, Number(v) || 1) })}
+          />
+        )}
+
+        {!isPandit && (
+          <Select
+            label="Service"
+            value={form.selectedService}
+            onChange={(v) => setForm({ ...form, selectedService: v })}
+            options={menuItems.map(m => ({
+              value: m.name,
+              label: `${m.name} — ₹${m.price.toLocaleString('en-IN')}`,
+            }))}
           />
         )}
 
