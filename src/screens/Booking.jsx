@@ -5,7 +5,7 @@ import Button from '../components/ui/Button.jsx';
 import VendorImage from '../components/ui/VendorImage.jsx';
 import { Input, Textarea, Select } from '../components/ui/Input.jsx';
 import {
-  VENDORS_BY_ID, BUDGET_CATEGORIES, getVendorName, getVendorLocationString, getVendorPriceLabel,
+  VENDORS_BY_ID, BUDGET_CATEGORIES, getVendorName, getVendorLocationString,
   getVendorMaxPrice, getVendorMenu,
 } from '../data/vendors.js';
 import { useApp, formatINR, formatDate } from '../context/AppContext.jsx';
@@ -84,7 +84,6 @@ export default function Booking() {
 
   const vendorName = getVendorName(vendor, t.lang);
   const vendorLocation = getVendorLocationString(vendor, state.user.city, t.lang, t);
-  const vendorPriceLabel = getVendorPriceLabel(vendor, ceremonyKey, t, state.user.city);
   const dateLocale = t.lang === 'hi' ? 'hi-IN' : 'en-IN';
 
   const submit = async (e) => {
@@ -126,7 +125,7 @@ export default function Booking() {
           <VendorImage vendor={vendor} className="booking__vendor-img" />
           <div>
             <div className="booking__vendor-name">{vendorName}</div>
-            <div className="booking__vendor-meta">{vendorLocation} · {vendorPriceLabel}</div>
+            <div className="booking__vendor-meta">{vendorLocation} · ★ {vendor.rating}</div>
           </div>
         </div>
 
