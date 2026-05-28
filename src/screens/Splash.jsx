@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import Logo from '../components/ui/Logo.jsx';
@@ -9,19 +9,22 @@ export default function Splash() {
   const nav = useNavigate();
   const { state } = useApp();
   const t = useT();
+  const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    const id = setTimeout(() => {
+    const exitId = setTimeout(() => setExiting(true), 2450);
+    const navId  = setTimeout(() => {
       nav(state.isAuthed ? '/home' : '/onboarding/1', { replace: true });
-    }, 1800);
-    return () => clearTimeout(id);
+    }, 2800);
+    return () => { clearTimeout(exitId); clearTimeout(navId); };
   }, [nav, state.isAuthed]);
 
   return (
-    <div className="splash">
+    <div className={`splash${exiting ? ' splash--exiting' : ''}`}>
       <div className="splash__center">
         <Logo size="xl" />
         <p className="splash__tag">{t('splash.tag')}</p>
+        <div className="splash__spinner" />
       </div>
     </div>
   );
