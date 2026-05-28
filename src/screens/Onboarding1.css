@@ -26,3 +26,18 @@
 .ob1__terms {
   font-size: 11px; color: var(--color-grey-500); text-align: center; margin-top: 8px;
 }
+/* ADD at the bottom */
+@keyframes ob1-enter {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ob1 {
+  animation: ob1-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
