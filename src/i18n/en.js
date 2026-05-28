@@ -80,7 +80,7 @@ export default {
   'vd.kmAway': 'km away',
   'vd.priceLabel': 'Price',
   'vd.menu': 'Menu / Price List',
-  'vd.perPlate': '/plate',
+  'vd.perPlate': '/ plate',
   'price.from': 'From',
   'cat.perPlate': 'Plate',
 
