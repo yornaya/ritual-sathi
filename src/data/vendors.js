@@ -277,9 +277,10 @@ export function getVendorPriceLabel(vendor, ceremonyKey, t, city) {
 
   if (vendor.category === 'CATERER') {
     if (menuEn.length === 0) return '';
-    const max = Math.max(...menuEn.map(m => m.price));
+    const min = Math.min(...menuEn.map(m => m.price));
     const plate = t ? t('cat.perPlate') : 'Plate';
-    return `${formatINR(max)} / ${plate}`;
+    const from = t ? t('price.from') : 'From';
+    return `${from} ${formatINR(min)} / ${plate}`;
   }
 
   if (vendor.category === 'PANDIT') {
