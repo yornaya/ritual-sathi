@@ -26,7 +26,7 @@ export default {
   'btn.continueAnyway': 'Continue',
 
   // Splash + Onboarding 1
-  'splash.tag': 'Your partner in every ceremony',
+  'splash.tag': 'Your partner for every ceremony',
   'ob1.tagline': 'Plan every ceremony, effortlessly.',
   'ob1.terms': 'By continuing, you agree to our Terms & Privacy Policy',
 
