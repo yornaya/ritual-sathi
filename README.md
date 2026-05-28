@@ -1,9 +1,13 @@
 # RitualSathi — Ceremony Vendor Aggregator
 
-A mobile-first web application built with **React + Vite** for planning and booking vendors across Indian ceremonies.
+> **Plan every ceremony, effortlessly.**
+
+RitualSathi is a mobile-first platform that solves a deeply felt problem across urban and semi-urban India: there is no single trusted place to discover, compare, and book vendors for Indian ceremonies. Today, 80% of families rely entirely on word-of-mouth, vendors are scattered across cities with no upfront pricing, and 33% of ceremony planners face budget overruns. RitualSathi brings caterers, decorators, photographers, and priests onto one platform: filtered by city, ceremony type, and budget, so families can plan a Wedding, Annaprashan, Upanayan, Shraddh, Engagement, or Anniversary with verified ratings, transparent costs, and confirmed bookings, all without a single phone call.
+
+Built as a frontend prototype for the **[TIU-UCBCS-S208] Design Thinking** course by Group 3.
 
 **Live Demo:** [ritual-sathi.vercel.app](https://ritual-sathi.vercel.app/)
-> Best viewed in mobile / responsive mode (412 x 1091 px).
+> Best viewed in mobile / responsive mode (412 × 1091 px).
 
 ---
 
@@ -21,22 +25,24 @@ Open the printed local URL (usually `http://localhost:5173`) in your browser and
 
 ## Features
 
-### Onboarding & Personalization
-- Multi-step onboarding collects ceremony preferences, city, and budget before the user reaches the Home screen
+### Onboarding & Personalisation
+- Multi-step onboarding collects ceremony preferences, budget, date, and city before the user reaches the Home screen
 - **Budget slider** (Rs. 0 – Rs. 50 Lakh, default Rs. 25 L) is configured once during onboarding and propagates across the entire app
 - **Multi-select ceremony chips** allow users to tag all ceremonies they are planning in a single step
 
 ### Vendor Discovery & Booking
 - **Smart vendor feed** on the Home screen automatically filters vendors to fit within the user's configured budget
 - **Search** vendors by name or service category
-- **Vendor Detail** page displays photos, ratings, a full service menu, and itemized pricing
+- **City-localised venue defaults** — the default venue in the Booking form automatically matches the city chosen during onboarding or updated from the Profile tab
+- **Vendor Detail** page displays photos, ratings, a full service menu, and itemised pricing
 - **Flexible cost calculation** — vendors are priced by plate count, event duration, or per-event basis depending on their category
+- **Star rating** is shown on the vendor info card inside the Booking form
 - **Save vendors** using the heart icon on the Vendor Detail page for quick access later
 
 ### Booking Management
 - **Booking form** features interactive sliders for guest count and date selection with a real-time cost preview
 - Each confirmed booking generates a unique **reference code**
-- **My Bookings** screen organises bookings into **Upcoming** and **Past** tabs
+- **My Bookings** screen organises bookings into the **Upcoming** tab
 
 ### Budget Planner
 - Dedicated Budget Planner screen with a hero card displaying the user's remaining balance
@@ -48,7 +54,13 @@ Open the printed local URL (usually `http://localhost:5173`) in your browser and
 - **Log out** clears all persisted state and redirects to the Splash screen
 
 ### Internationalisation
-- i18n support scaffolded under `src/i18n/` for future multi-language expansion
+- i18n support scaffolded under `src/i18n/` for future multi-language expansion (English and Hindi stubs included)
+
+---
+
+## Supported Ceremonies
+
+Wedding · Annaprashan · Shraddh · Upanayan · Engagement · Anniversary
 
 ---
 
@@ -76,11 +88,18 @@ ritual-sathi/
 │   │       ├── Slider
 │   │       ├── VendorCard
 │   │       ├── AppBar
+│   │       ├── PickerOverlay
 │   │       └── CeremonyChip
 │   │
 │   ├── screens/                  # One file per screen + co-located CSS
 │   │   ├── Splash.jsx
-│   │   ├── Onboarding1-5.jsx
+│   │   ├── Onboarding1.jsx
+│   │   ├── Onboarding2.jsx
+│   │   ├── Onboarding3.jsx
+│   │   ├── Onboarding4.jsx
+│   │   ├── Onboarding5.jsx
+│   │   ├── OnboardingDate.jsx
+│   │   ├── Login.jsx
 │   │   ├── Home.jsx
 │   │   ├── VendorDetail.jsx
 │   │   ├── Booking.jsx
@@ -90,7 +109,7 @@ ritual-sathi/
 │   │   ├── SavedVendors.jsx
 │   │   └── Bookings.jsx
 │   │
-│   ├── i18n/                     # Internationalisation stubs
+│   ├── i18n/                     # Internationalisation stubs (en, hi)
 │   └── styles/
 │       └── global.css            # Global CSS variables, fonts, and layout resets
 ```
@@ -110,6 +129,15 @@ ritual-sathi/
 
 ---
 
-## Supported Ceremonies
+## Team
 
-Wedding · Annaprashan · Shraadh · Upanayan · Engagement · Anniversary
+**[TIU-UCBCS-S208] Design Thinking — Group 3**
+
+| Roll No      | Name            |
+|--------------|-----------------|
+| 241001020015 | Mandira Barman  |
+| 241001020016 | Protush Saha    |
+| 241001020017 | Ishika Gupta    |
+| 241001020018 | Akashdip Bag    |
+| 241001020019 | Ayan Roy        |
+| 241001020020 | Anant Raj       |
