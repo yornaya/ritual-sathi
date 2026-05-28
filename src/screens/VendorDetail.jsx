@@ -72,7 +72,7 @@ export default function VendorDetail() {
             <li key={i} className="vd__menu-item">
               <span className="vd__menu-name">{m.name}</span>
               <span className="vd__menu-price">
-                {formatINR(m.price)}{vendor.priceUnit === 'plate' ? ' ' + t('vd.perPlate') : ''}
+                {formatINR(m.price)}{vendor.priceUnit === 'plate' ? t('vd.perPlate') : ''}
               </span>
             </li>
           ))}
