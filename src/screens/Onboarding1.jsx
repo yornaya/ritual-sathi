@@ -1,43 +1,23 @@
-.ob1 {
-  flex: 1 1 auto;
-  min-height: 0;
-  background: var(--color-white);
-  display: flex;
-  flex-direction: column;
-  color: var(--color-ink);
-}
-.ob1__hero {
-  flex: 1;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 14px;
-  padding: calc(env(safe-area-inset-top) + 40px) 20px 40px;
-  text-align: center;
-}
-.ob1__tagline {
-  white-space: nowrap;
-  font-size: 14px;
-  color: var(--color-grey-600);
-  letter-spacing: 0.3px;
-}
-.ob1__panel {
-  padding: 0 24px calc(40px + env(safe-area-inset-bottom));
-  display: flex; flex-direction: column; gap: 10px;
-}
-.ob1__terms {
-  font-size: 11px; color: var(--color-grey-500); text-align: center; margin-top: 8px;
-}
-/* ADD at the bottom */
-@keyframes ob1-enter {
-  from {
-    opacity: 0;
-    transform: translateY(32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+import { useNavigate } from 'react-router-dom';
+import Button from '../components/ui/Button.jsx';
+import Logo from '../components/ui/Logo.jsx';
+import { useT } from '../i18n/index.js';
+import './Onboarding1.css';
 
-.ob1 {
-  animation: ob1-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+export default function Onboarding1() {
+  const nav = useNavigate();
+  const t = useT();
+  return (
+    <div className="ob1">
+      <div className="ob1__hero">
+        <Logo size="xl" />
+        <p className="ob1__tagline">{t('ob1.tagline')}</p>
+      </div>
+      <div className="ob1__panel">
+        <Button size="block" onClick={() => nav('/onboarding/2')}>{t('btn.createAccount')}</Button>
+        <Button variant="outline" size="block" onClick={() => nav('/login')}>{t('btn.login')}</Button>
+        <p className="ob1__terms">{t('ob1.terms')}</p>
+      </div>
+    </div>
+  );
 }
